@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Scheduledccrecipients</base>
+  <class>ScheduledReminderData</class>
+  <name>civicrm_scheduledreminderdata</name>
+  <comment>Table to store custom data of Scheduled Reminders</comment>
+  <add>4.6</add>
+  <log>true</log>
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>Unique ScheduledReminderData ID</comment>
+    <add>4.4</add>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>reminder_id</name>
+    <type>int unsigned</type>
+    <comment>FK to Scheduled Reminder</comment>
+    <add>4.6</add>
+  </field>
+  <foreignKey>
+    <name>reminder_id</name>
+    <table>civicrm_action_schedule</table>
+    <key>id</key>
+    <add>4.6</add>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>email_cc</name>
+    <type>varchar</type>
+    <length>32</length>
+    <comment>Email CC field of Schedule reminder</comment>
+    <add>4.6</add>
+  </field>
+
+  <field>
+    <name>email_bcc</name>
+    <type>varchar</type>
+    <length>32</length>
+    <comment>Email BCC field of Schedule reminder</comment>
+    <add>4.6</add>
+  </field>
+
+</table>
