@@ -194,3 +194,51 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
     civicrm_api3("ScheduledReminderData", "create", $params);
   }
 }
+
+/**
+ * Implements hook_civicrm_alterMailParams().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterMailParams
+ */
+function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
+  if ($params['groupName'] == "Scheduled Reminder Sender" && $params['entity'] == "action_schedule" && isset($params["token_params"])) {
+    $reminder_id = $params['entity_id'];
+    $data = civicrm_api3("ScheduledReminderData", "get", array(
+      "reminder_id"  => $reminder_id,
+      "sequential"   => TRUE,
+    ));
+
+    if ($data["count"] > 0) {
+      $data = $data["values"][0];
+
+      $emailCCContacts = $data["email_cc"];
+      $emailBCCContacts = $data["email_bcc"];
+
+      $ccEmails = getEmailsByContacts($emailCCContacts);
+      $bccEmails = getEmailsByContacts($emailBCCContacts);
+
+      $params["cc"] = implode(",", $ccEmails);
+      $params["bcc"] = implode(",", $bccEmails);
+    }
+  }
+}
+
+/**
+ * Function to return emails of given contacts
+ *
+ * @param $emailContacts
+ * @return array
+ * @throws CiviCRM_API3_Exception
+ */
+function getEmailsByContacts($emailContacts) {
+  if ($emailContacts != "") {
+    $emails = civicrm_api3('Contact', 'get', array(
+        'sequential' => 1,
+        'return' => "email",
+        'contact_id' => array('IN' => explode(",", $emailContacts)),
+    ));
+
+    $emails = array_filter(array_column($emails["values"], "email"));
+    return $emails;
+  }
+}
