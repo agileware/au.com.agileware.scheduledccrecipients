@@ -139,8 +139,14 @@ function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
       $data = civicrm_api3("ScheduledReminderData", "get", array(
         "reminder_id" => $values["id"],
       ));
-      $ccValues = array_column($data["values"], "email_cc");
-      $bccValues = array_column($data["values"], "email_bcc");
+
+      $ccValues = array();
+      $bccValues = array();
+
+      if ($data["count"]) {
+        $ccValues = array_column($data["values"], "email_cc");
+        $bccValues = array_column($data["values"], "email_bcc");
+      }
 
       $form->assign('cc_values', $ccValues);
       $form->assign('bcc_values', $bccValues);
