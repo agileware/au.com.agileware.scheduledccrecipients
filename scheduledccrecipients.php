@@ -197,7 +197,13 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
     $params["email_cc"] = $emailCCValues;
     $params["email_bcc"] = $emailBCCValues;
 
-    civicrm_api3("ScheduledReminderData", "create", $params);
+    $actionScheduleCount = civicrm_api3('ActionSchedule', 'getcount', array(
+      'id' => $formid,
+    ));
+
+    if ($actionScheduleCount) {
+      civicrm_api3("ScheduledReminderData", "create", $params);
+    }
   }
 }
 
