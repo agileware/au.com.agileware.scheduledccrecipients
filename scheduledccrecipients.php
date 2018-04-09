@@ -248,3 +248,17 @@ function getEmailsByContacts($emailContacts) {
     return $emails;
   }
 }
+
+/**
+ * Implements hook_civicrm_entityTypes().
+ *
+ */
+function accountsync_civicrm_entityTypes(&$entityTypes) {
+  if (!isset($entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'])) {
+    $entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'] = array(
+      'name' => 'ScheduledReminderData',
+      'class' => 'CRM_Scheduledccrecipients_DAO_ScheduledReminderData',
+      'table' => 'civicrm_scheduledreminderdata',
+    );
+  }
+}
