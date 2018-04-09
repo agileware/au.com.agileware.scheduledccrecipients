@@ -253,7 +253,7 @@ function getEmailsByContacts($emailContacts) {
  * Implements hook_civicrm_entityTypes().
  *
  */
-function accountsync_civicrm_entityTypes(&$entityTypes) {
+function scheduledccrecipients_civicrm_entityTypes(&$entityTypes) {
   if (!isset($entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'])) {
     $entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'] = array(
       'name' => 'ScheduledReminderData',
