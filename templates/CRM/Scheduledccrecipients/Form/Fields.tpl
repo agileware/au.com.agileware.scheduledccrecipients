@@ -46,6 +46,19 @@
                 $('#email_bcc').select2("val", bccValues);
             }
         }
+
+        $(document).ajaxComplete(function( event, xhr, settings ) {
+            var m = settings.url.match(/civicrm\/ajax\/mapping(?=\/?[&?]).*[&?]mappingID=([0-9]+)/i)
+            if(m) {
+                if(m[1] == '1') {
+                    $('#emailBCCGroup').show();
+                    $('#emailCCGroup').show();
+                } else {
+                    $('#emailBCCGroup').hide();
+                    $('#emailCCGroup').hide();
+                }
+            }
+        });
     });
 </script>
 {/literal}
