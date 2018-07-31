@@ -8,7 +8,7 @@ coordinator when a participant signs up.
 
 ## Installation ##
 
-1. Download [an archive](https://github.com/agileware/au.com.agileware.ewayrecurring/archive/master.zip)
+1. Download [an archive](https://github.com/agileware/au.com.agileware.scheduledccrecipients/archive/master.zip)
    of the extension
 2. Extract the contents of the extension archive into your CiviCRM Extensions
    Directory
