@@ -1,10 +1,8 @@
-# Scheduled Reminder CC Recipients for CiviCRM #
+# Scheduled Reminder CC/BCC Recipients for CiviCRM #
 
-This extension provides extra fields on the CiviCRM Scheduled reminder screen,
-allowing you to send a carbon copy of the reminder to additional contacts.
+This extension provides extra fields on the CiviCRM Scheduled reminder screen, allowing you to send a carbon copy or blind carbon copy of the reminder to additional contacts.
 
-This allows you to, for example, send a copy of a scheduled reminder to an event
-coordinator when a participant signs up.
+This allows you to, for example, send a copy of a scheduled reminder to an event coordinator when a participant signs up.
 
 ## Installation ##
 
