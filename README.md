@@ -6,11 +6,12 @@ This allows you to, for example, send a copy of a scheduled reminder to an event
 
 ## Installation ##
 
-1. Download [an archive](https://github.com/agileware/au.com.agileware.scheduledccrecipients/archive/master.zip)
+1. To allow use of CC/BCC Recipient fields, download and apply patch to CiviCRM: [civcirm-core-reminder-tokens.patch](civcirm-core-reminder-tokens.patch)
+2. Download [an archive](https://github.com/agileware/au.com.agileware.scheduledccrecipients/archive/master.zip)
    of the extension
-2. Extract the contents of the extension archive into your CiviCRM Extensions
+3. Extract the contents of the extension archive into your CiviCRM Extensions
    Directory
-3. Select the “Install” button from the Extensions page of your CiviCRM
+4. Select the “Install” button from the Extensions page of your CiviCRM
    interface ( /civicrm/admin/extensions?reset=1 )
 
 
