@@ -1,10 +1,10 @@
 <table>
-    <tr id="emailCCGroup" class="crm-scheduleReminder-form-block-email_cc_field recipient" style="display: none;">
+    <tr id="emailCCGroup" class="crm-scheduleReminder-form-block-email_cc_field recipient">
         <td class="label">{$form.email_cc.label}</td>
         <td>{$form.email_cc.html}</td>
     </tr>
 
-    <tr id="emailBCCGroup" class="crm-scheduleReminder-form-block-email_bcc_field recipient" style="display: none;">
+    <tr id="emailBCCGroup" class="crm-scheduleReminder-form-block-email_bcc_field recipient">
         <td class="label">{$form.email_bcc.label}</td>
         <td>{$form.email_bcc.html}</td>
     </tr>
@@ -47,18 +47,16 @@
             }
         }
 
-        $(document).ajaxComplete(function( event, xhr, settings ) {
-            var m = settings.url.match(/civicrm\/ajax\/mapping(?=\/?[&?]).*[&?]mappingID=([0-9]+)/i)
-            if(m) {
-                if(m[1] == '1') {
-                    $('#emailBCCGroup').show();
-                    $('#emailCCGroup').show();
-                } else {
-                    $('#emailBCCGroup').hide();
-                    $('#emailCCGroup').hide();
-                }
+        $('body').on('change','#limit_to, #recipient',function(e) {
+            if ($(this).val() == '') {
+                $('#emailBCCGroup').hide();
+                $('#emailCCGroup').hide();
+            } else {
+                $('#emailBCCGroup').show();
+                $('#emailCCGroup').show();
             }
         });
+
     });
 </script>
 {/literal}
