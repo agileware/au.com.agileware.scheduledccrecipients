@@ -16,10 +16,8 @@ This allows you to, for example, send a copy of a scheduled reminder to an event
 
 ## Usage ##
 
-When creating a new scheduled reminder, add additional contacts using the CC and
-BCC fields that are added to this form:
+When creating a new scheduled reminder, add additional contacts using the CC and BCC fields that are added to this form:
 
 ![](scheduledccrecipients.png)
 
-When the reminder is sent, these Contacts will be emailed in addition to the
-Recipients configured for the reminder.
+When the reminder is sent, these Contacts will be emailed in addition to the Recipients configured for the reminder.
