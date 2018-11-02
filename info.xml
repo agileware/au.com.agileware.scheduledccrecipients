@@ -2,7 +2,7 @@
 <extension key="au.com.agileware.scheduledccrecipients" type="module">
   <file>scheduledccrecipients</file>
   <name>Scheduled Reminder CC Recipients</name>
-  <description>FIXME</description>
+  <description>This extension provides extra fields on the CiviCRM Scheduled reminder screen, allowing you to send a carbon copy or blind carbon copy of the reminder to additional contacts.</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Agileware</author>
