@@ -9,13 +9,9 @@ Installation
 ------
 
 1. To allow use of CC/BCC Recipient fields, download and apply patch to CiviCRM: [civcirm-core-reminder-tokens.patch](civcirm-core-reminder-tokens.patch)
-2. Download [an archive](https://github.com/agileware/au.com.agileware.scheduledccrecipients/archive/master.zip)
-   of the extension
-3. Extract the contents of the extension archive into your CiviCRM Extensions
-   Directory
-4. Select the “Install” button from the Extensions page of your CiviCRM
-   interface ( /civicrm/admin/extensions?reset=1 )
-
+1. Download the [latest version of this extension](https://github.com/agileware/au.com.agileware.scheduledccrecipients/archive/master.zip)
+1. Unzip in the CiviCRM extension directory, as defined in 'System Settings / Directories'.
+1. Go to "Administer / System Settings / Extensions" and enable the "Scheduled Reminder CC Recipients (au.com.agileware.scheduledccrecipients)" extension.
 
 Usage
 ------
