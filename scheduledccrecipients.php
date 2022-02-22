@@ -135,12 +135,12 @@ function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
     if ($form->getVar('_id')) {
       $values = $form->getVar('_values');
 
-      $data = civicrm_api3("ScheduledReminderData", "get", array(
+      $data = civicrm_api3("ScheduledReminderData", "get", [
         "reminder_id" => $values["id"],
-      ));
+      ]);
 
-      $ccValues = array();
-      $bccValues = array();
+      $ccValues = [];
+      $bccValues = [];
 
       if ($data["count"]) {
         $fillReminderCustomFields = TRUE;
@@ -154,21 +154,21 @@ function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
 
     $form->assign('fill_reminder_custom_fields', $fillReminderCustomFields);
 
-    $form->addEntityRef('email_cc', ts('CC'), array(
+    $form->addEntityRef('email_cc', ts('CC'), [
         'entity' => 'Contact',
         'placeholder' => ts('- Select Contacts -'),
-        'select' => array('minimumInputLength' => 0, 'multiple' => TRUE),
-    ));
+        'select' => ['minimumInputLength' => 0, 'multiple' => TRUE],
+    ]);
 
-    $form->addEntityRef('email_bcc', ts('BCC'), array(
+    $form->addEntityRef('email_bcc', ts('BCC'), [
         'entity' => 'Contact',
         'placeholder' => ts('- Select Contacts -'),
-        'select' => array('minimumInputLength' => 0, 'multiple' => TRUE),
-    ));
+        'select' => ['minimumInputLength' => 0, 'multiple' => TRUE],
+    ]);
 
-    CRM_Core_Region::instance('page-body')->add(array(
+    CRM_Core_Region::instance('page-body')->add([
         'template' => 'CRM/Scheduledccrecipients/Form/Fields.tpl',
-    ));
+    ]);
   }
 }
 
@@ -183,10 +183,10 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
     $emailCCValues = CRM_Utils_Array::value('email_cc', $form->_submitValues);
     $emailBCCValues = CRM_Utils_Array::value('email_bcc', $form->_submitValues);
 
-    $params = array(
+    $params = [
       "reminder_id" => $formid,
       "sequential"  => TRUE,
-    );
+    ];
 
     $data = civicrm_api3("ScheduledReminderData", "get", $params);
 
@@ -197,9 +197,9 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
     $params["email_cc"] = $emailCCValues;
     $params["email_bcc"] = $emailBCCValues;
 
-    $actionScheduleCount = civicrm_api3('ActionSchedule', 'getcount', array(
+    $actionScheduleCount = civicrm_api3('ActionSchedule', 'getcount', [
       'id' => $formid,
-    ));
+    ]);
 
     if ($actionScheduleCount) {
       civicrm_api3("ScheduledReminderData", "create", $params);
@@ -215,10 +215,10 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
 function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
   if ($params['groupName'] == "Scheduled Reminder Sender" && $params['entity'] == "action_schedule" && isset($params["token_params"])) {
     $reminder_id = $params['entity_id'];
-    $data = civicrm_api3("ScheduledReminderData", "get", array(
+    $data = civicrm_api3("ScheduledReminderData", "get", [
       "reminder_id"  => $reminder_id,
       "sequential"   => TRUE,
-    ));
+    ]);
 
     if ($data["count"] > 0) {
       $data = $data["values"][0];
@@ -243,16 +243,18 @@ function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
  * @throws CiviCRM_API3_Exception
  */
 function getEmailsByContacts($emailContacts) {
+  $emails = [];
+
   if ($emailContacts != "") {
-    $emails = civicrm_api3('Contact', 'get', array(
+    $emails = civicrm_api3('Contact', 'get', [
         'sequential' => 1,
         'return' => "email",
-        'contact_id' => array('IN' => explode(",", $emailContacts)),
-    ));
+        'contact_id' => ['IN' => explode(",", $emailContacts)],
+    ]);
 
     $emails = array_filter(array_column($emails["values"], "email"));
-    return $emails;
   }
+  return $emails;
 }
 
 /**
@@ -261,10 +263,10 @@ function getEmailsByContacts($emailContacts) {
  */
 function scheduledccrecipients_civicrm_entityTypes(&$entityTypes) {
   if (!isset($entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'])) {
-    $entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'] = array(
+    $entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'] = [
       'name' => 'ScheduledReminderData',
       'class' => 'CRM_Scheduledccrecipients_DAO_ScheduledReminderData',
       'table' => 'civicrm_scheduledreminderdata',
-    );
+    ];
   }
 }
