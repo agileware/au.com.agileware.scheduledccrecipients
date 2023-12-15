@@ -1,40 +1,26 @@
-<table>
-    <tr id="emailCCGroup" class="crm-scheduleReminder-form-block-email_cc_field recipient">
-        <td class="label">{$form.email_cc.label}</td>
-        <td>{$form.email_cc.html}</td>
-    </tr>
-
-    <tr id="emailBCCGroup" class="crm-scheduleReminder-form-block-email_bcc_field recipient">
-        <td class="label">{$form.email_bcc.label}</td>
-        <td>{$form.email_bcc.html}</td>
-    </tr>
-</table>
-
-
 {literal}
 <script type="text/javascript">
     CRM.$(function($) {
-        $('#emailBCCGroup').insertAfter('#recipientList').show();
-        $('#emailCCGroup').insertAfter('#recipientList').show();
+        const emailCCGroup = $(`<tr id="emailCCGroup" class="crm-scheduleReminder-form-block-email_cc_field recipient">
+          <td class="label">{/literal}{$form.email_cc.label}</td>
+          <td>{$form.email_cc.html}{literal}</td>
+        </tr>`);
+        const emailBCCGroup = $(`<tr id="emailBCCGroup" class="crm-scheduleReminder-form-block-email_bcc_field recipient">
+          <td class="label">{/literal}{$form.email_bcc.label}</td>
+          <td>{$form.email_bcc.html}{literal}</td>
+        </tr>`)
+        const recipientListingGroup = $('tr.crm-scheduleReminder-form-block-recipientListing').last()
+        emailCCGroup.insertAfter(recipientListingGroup).show();
+        emailBCCGroup.insertAfter(emailCCGroup).show();
 
-        var fillReminderCustomFields = {/literal}{if $fill_reminder_custom_fields}{$fill_reminder_custom_fields}{else}0{/if}{literal};
+        const fillReminderCustomFields = {/literal}{if $fill_reminder_custom_fields}{$fill_reminder_custom_fields}{else}0{/if}{literal};
 
         if(fillReminderCustomFields == 1) {
-            var ccValues = [];
-            var bccValues = [];
+            let ccValues = [];
+            let bccValues = [];
             {/literal}
-                {foreach from=$cc_values item=cc_value}
-                    {literal}
-                        ccValues.push({/literal}{$cc_value}{literal});
-                    {/literal}
-                {/foreach}
-
-                {foreach from=$bcc_values item=bcc_value}
-                    {literal}
-                        bccValues.push({/literal}{$bcc_value}{literal});
-                    {/literal}
-                {/foreach}
-
+            {foreach from=$cc_values  item=cc_value }ccValues.push({$cc_value});{/foreach}
+            {foreach from=$bcc_values item=bcc_value}bccValues.push({$bcc_value});{/foreach}
             {literal}
 
             setTimeout(function() {
@@ -49,11 +35,11 @@
 
         $('body').on('change','#limit_to, #recipient',function(e) {
             if ($(this).val() == '') {
-                $('#emailBCCGroup').hide();
-                $('#emailCCGroup').hide();
+                emailBCCGroup.hide();
+                emailCCGroup.hide();
             } else {
-                $('#emailBCCGroup').show();
-                $('#emailCCGroup').show();
+                emailBCCGroup.show();
+                emailCCGroup.show();
             }
         });
 

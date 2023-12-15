@@ -176,12 +176,17 @@ function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
  * Implements hook_civicrm_postProcess().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postProcess
+ *
+ * @param $formName string
+ * @param $form \CRM_Core_Form
+ *
+ * @throws \CRM_Core_Exception
  */
 function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
   if ($formName == "CRM_Admin_Form_ScheduleReminders") {
     $formid = $form->get('id');
-    $emailCCValues = CRM_Utils_Array::value('email_cc', $form->_submitValues);
-    $emailBCCValues = CRM_Utils_Array::value('email_bcc', $form->_submitValues);
+    $emailCCValues = $form->_submitValues['email_cc'] ?? NULL;
+    $emailBCCValues = $form->_submitValues['email_bcc'] ?? NULL;
 
     $params = [
       "reminder_id" => $formid,
