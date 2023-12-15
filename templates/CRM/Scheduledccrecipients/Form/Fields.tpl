@@ -9,8 +9,8 @@
           <td class="label">{/literal}{$form.email_bcc.label}</td>
           <td>{$form.email_bcc.html}{literal}</td>
         </tr>`)
-        const recipientListingGroup = $('tr.crm-scheduleReminder-form-block-recipientListing').last()
-        emailCCGroup.insertAfter(recipientListingGroup).show();
+        const emailFromGroup = $('#from_email').closest('tr');
+        emailCCGroup.insertAfter(emailFromGroup).show();
         emailBCCGroup.insertAfter(emailCCGroup).show();
 
         const fillReminderCustomFields = {/literal}{if $fill_reminder_custom_fields}{$fill_reminder_custom_fields}{else}0{/if}{literal};
@@ -32,17 +32,6 @@
                 $('#email_bcc').select2("val", bccValues);
             }
         }
-
-        $('body').on('change','#limit_to, #recipient',function(e) {
-            if ($(this).val() == '') {
-                emailBCCGroup.hide();
-                emailCCGroup.hide();
-            } else {
-                emailBCCGroup.show();
-                emailCCGroup.show();
-            }
-        });
-
     });
 </script>
 {/literal}
