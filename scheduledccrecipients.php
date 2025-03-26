@@ -173,12 +173,13 @@ function getEmailsByContacts($emailContacts) {
  * Implements hook_civicrm_entityTypes().
  *
  */
-function scheduledccrecipients_civicrm_entityTypes(&$entityTypes) {
-  if (!isset($entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'])) {
-    $entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'] = [
-      'name' => 'ScheduledReminderData',
-      'class' => 'CRM_Scheduledccrecipients_DAO_ScheduledReminderData',
-      'table' => 'civicrm_scheduledreminderdata',
-    ];
-  }
-}
+
+// function scheduledccrecipients_civicrm_entityTypes(&$entityTypes) {
+//   if (!isset($entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'])) {
+//     $entityTypes['CRM_Scheduledccrecipients_DAO_ScheduledReminderData'] = [
+//       'name' => 'ScheduledReminderData',
+//       'class' => 'CRM_Scheduledccrecipients_DAO_ScheduledReminderData',
+//       'table' => 'civicrm_scheduledreminderdata',
+//     ];
+//   }
+// }
