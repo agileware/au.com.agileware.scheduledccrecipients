@@ -73,6 +73,18 @@ Guide](https://docs.civicrm.org/sysadmin/en/latest/customize/extensions/).
 Remember to also apply the required core patch (see above) - the extension will install and its
 fields will display without it, but the CC/BCC recipients will not actually be emailed.
 
+## Running the tests
+
+The PHPUnit tests in `tests/phpunit` run inside a CiviCRM site (they use CiviCRM's headless test
+database). On a DDEV CiviCRM site, with the extension installed, set the headless database DSN once
+(`cv ev '\Civi\Cv\Config::update(...)'`, see the shared workflow) and then, from the extension
+folder:
+
+    phpunit9 --do-not-cache-result
+
+They also run on every push and pull request through `.github/workflows/phpunit-tests.yml`, which
+calls the shared `agileware/ci-workflows` PHPUnit workflow.
+
 ## About the Authors
 
 This CiviCRM extension was developed by the team at

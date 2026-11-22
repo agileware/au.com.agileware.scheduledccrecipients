@@ -125,8 +125,15 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterMailParams
  */
 function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
-  if ($params['groupName'] == "Scheduled Reminder Sender" && $params['entity'] == "action_schedule" && isset($params["token_params"])) {
-    $reminder_id = $params['entity_id'];
+  // This hook runs for every outgoing mail. Many of them (for example receipts
+  // built from message template workflows) carry no groupName, entity or
+  // entity_id, so read them defensively. Anything that is not a scheduled
+  // reminder is left alone.
+  $groupName = $params['groupName'] ?? NULL;
+  $entity = $params['entity'] ?? NULL;
+  $reminder_id = $params['entity_id'] ?? NULL;
+
+  if ($groupName === "Scheduled Reminder Sender" && $entity === "action_schedule" && isset($params["token_params"]) && $reminder_id) {
     $data = civicrm_api3("ScheduledReminderData", "get", [
       "reminder_id"  => $reminder_id,
       "sequential"   => TRUE,
@@ -135,8 +142,8 @@ function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
     if ($data["count"] > 0) {
       $data = $data["values"][0];
 
-      $emailCCContacts = $data["email_cc"];
-      $emailBCCContacts = $data["email_bcc"];
+      $emailCCContacts = $data["email_cc"] ?? "";
+      $emailBCCContacts = $data["email_bcc"] ?? "";
 
       $ccEmails = getEmailsByContacts($emailCCContacts);
       $bccEmails = getEmailsByContacts($emailBCCContacts);
@@ -157,7 +164,7 @@ function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
 function getEmailsByContacts($emailContacts) {
   $emails = [];
 
-  if ($emailContacts != "") {
+  if (!empty($emailContacts)) {
     $emails = civicrm_api3('Contact', 'get', [
         'sequential' => 1,
         'return' => "email",
