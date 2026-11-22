@@ -127,11 +127,88 @@ class AlterMailParamsTest extends ScheduledccrecipientsTestCase {
     $this->assertEqualsCanonicalizing(['a@example.test', 'b@example.test'], getEmailsByContacts("$a,$b"));
   }
 
-  private function saveData(int $reminderId, array $ccIds, array $bccIds): void {
+  /**
+   * Issue 1: send the reminder to the recipient's email of a chosen location
+   * type.
+   */
+  public function testReminderGoesToTheChosenLocationType(): void {
+    $reminderId = $this->createReminder();
+    [$contactId, $workTypeId] = $this->contactWithWorkEmail('primary@example.test', 'work@example.test');
+    $this->saveData($reminderId, [], [], $workTypeId);
+
+    $params = $this->reminderMailParams($reminderId, $contactId, 'primary@example.test');
+    scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
+
+    $this->assertSame('work@example.test', $params['toEmail']);
+  }
+
+  public function testPrimaryEmailIsKeptWhenNoLocationTypeIsChosen(): void {
+    $reminderId = $this->createReminder();
+    [$contactId] = $this->contactWithWorkEmail('primary@example.test', 'work@example.test');
+    $this->saveData($reminderId, [$this->createContact('cc@example.test')], []);
+
+    $params = $this->reminderMailParams($reminderId, $contactId, 'primary@example.test');
+    scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
+
+    $this->assertSame('primary@example.test', $params['toEmail']);
+  }
+
+  public function testPrimaryEmailIsKeptWhenTheContactHasNoEmailOfThatType(): void {
+    $reminderId = $this->createReminder();
+    $contactId = $this->createContact('primary@example.test');
+    $this->saveData($reminderId, [], [], $this->locationTypeId('Work'));
+
+    $params = $this->reminderMailParams($reminderId, $contactId, 'primary@example.test');
+    scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
+
+    $this->assertSame('primary@example.test', $params['toEmail']);
+  }
+
+  public function testPrimaryEmailIsKeptWhenTheEmailOfThatTypeIsOnHold(): void {
+    $reminderId = $this->createReminder();
+    [$contactId, $workTypeId] = $this->contactWithWorkEmail('primary@example.test', 'work@example.test', 1);
+    $this->saveData($reminderId, [], [], $workTypeId);
+
+    $params = $this->reminderMailParams($reminderId, $contactId, 'primary@example.test');
+    scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
+
+    $this->assertSame('primary@example.test', $params['toEmail']);
+  }
+
+  public function testAlternateRecipientsAreNotChanged(): void {
+    $reminderId = $this->createReminder();
+    [$contactId, $workTypeId] = $this->contactWithWorkEmail('primary@example.test', 'work@example.test');
+    $this->saveData($reminderId, [], [], $workTypeId);
+
+    $params = $this->reminderMailParams($reminderId, $contactId, 'someone.else@example.test');
+    scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
+
+    $this->assertSame('someone.else@example.test', $params['toEmail']);
+  }
+
+  private function locationTypeId(string $name): int {
+    return (int) civicrm_api3('LocationType', 'getvalue', ['name' => $name, 'return' => 'id']);
+  }
+
+  /**
+   * A contact with a primary email and a second email of the Work type.
+   *
+   * @return array
+   *   The contact id and the Work location type id.
+   */
+  private function contactWithWorkEmail(string $primary, string $work, int $workOnHold = 0): array {
+    $contactId = $this->createContact($primary);
+    $workTypeId = $this->locationTypeId('Work');
+    civicrm_api3('Email', 'create', ['contact_id' => $contactId, 'email' => $work, 'location_type_id' => $workTypeId, 'is_primary' => 0, 'on_hold' => $workOnHold]);
+    return [$contactId, $workTypeId];
+  }
+
+  private function saveData(int $reminderId, array $ccIds, array $bccIds, ?int $locationTypeId = NULL): void {
     civicrm_api3('ScheduledReminderData', 'create', [
       'reminder_id' => $reminderId,
       'email_cc' => implode(',', $ccIds),
       'email_bcc' => implode(',', $bccIds),
+      'location_type_id' => $locationTypeId ?? 'null',
     ]);
   }
 

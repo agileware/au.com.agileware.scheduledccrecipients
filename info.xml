@@ -2,7 +2,7 @@
 <extension key="au.com.agileware.scheduledccrecipients" type="module">
   <file>scheduledccrecipients</file>
   <name>Scheduled Reminder CC Recipients</name>
-  <description>This extension provides extra fields on the CiviCRM Scheduled reminder screen, allowing you to send a carbon copy or blind carbon copy of the reminder to additional contacts.</description>
+  <description>This extension provides extra fields on the CiviCRM Scheduled reminder screen, allowing you to send a carbon copy or blind carbon copy of the reminder to additional contacts, and to choose which email location type the reminder is sent to.</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Agileware</author>
@@ -15,7 +15,7 @@
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
   <releaseDate>2026-11-22</releaseDate>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>5.51</ver>

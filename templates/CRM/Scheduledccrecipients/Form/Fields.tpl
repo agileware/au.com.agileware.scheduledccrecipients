@@ -1,6 +1,10 @@
 {literal}
 <script type="text/javascript">
     CRM.$(function($) {
+        const locationTypeGroup = $(`<tr id="emailLocationTypeGroup" class="crm-scheduleReminder-form-block-location_type_id recipient">
+          <td class="label">{/literal}{$form.location_type_id.label}</td>
+          <td>{$form.location_type_id.html}{literal}</td>
+        </tr>`);
         const emailCCGroup = $(`<tr id="emailCCGroup" class="crm-scheduleReminder-form-block-email_cc_field recipient">
           <td class="label">{/literal}{$form.email_cc.label}</td>
           <td>{$form.email_cc.html}{literal}</td>
@@ -10,10 +14,16 @@
           <td>{$form.email_bcc.html}{literal}</td>
         </tr>`)
         const emailFromGroup = $('#from_email').closest('tr');
-        emailCCGroup.insertAfter(emailFromGroup).show();
+        locationTypeGroup.insertAfter(emailFromGroup).show();
+        emailCCGroup.insertAfter(locationTypeGroup).show();
         emailBCCGroup.insertAfter(emailCCGroup).show();
 
         const fillReminderCustomFields = {/literal}{if $fill_reminder_custom_fields}{$fill_reminder_custom_fields}{else}0{/if}{literal};
+
+        const locationTypeValue = '{/literal}{$location_type_value}{literal}';
+        if (locationTypeValue) {
+            $('#location_type_id').val(locationTypeValue).trigger('change');
+        }
 
         if(fillReminderCustomFields == 1) {
             let ccValues = [];

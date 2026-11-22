@@ -49,5 +49,17 @@ return [
       'description' => E::ts('Email BCC field of Schedule reminder'),
       'add' => '4.6',
     ],
+    'location_type_id' => [
+      'title' => E::ts('Email Location Type'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'Select',
+      'description' => E::ts('Location type of the email address the reminder is sent to. NULL means the primary email.'),
+      'add' => '1.6',
+      'pseudoconstant' => [
+        'table' => 'civicrm_location_type',
+        'key_column' => 'id',
+        'label_column' => 'display_name',
+      ],
+    ],
   ],
 ];
