@@ -37,14 +37,14 @@ return [
     ],
     'email_cc' => [
       'title' => E::ts('Email Cc'),
-      'sql_type' => 'varchar(32)',
+      'sql_type' => 'text',
       'input_type' => 'Text',
       'description' => E::ts('Email CC field of Schedule reminder'),
       'add' => '4.6',
     ],
     'email_bcc' => [
       'title' => E::ts('Email Bcc'),
-      'sql_type' => 'varchar(32)',
+      'sql_type' => 'text',
       'input_type' => 'Text',
       'description' => E::ts('Email BCC field of Schedule reminder'),
       'add' => '4.6',

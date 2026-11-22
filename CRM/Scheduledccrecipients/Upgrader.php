@@ -131,4 +131,16 @@ class CRM_Scheduledccrecipients_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   } // */
 
+  /**
+   * Widen email_cc and email_bcc. They hold comma separated contact ids and
+   * varchar(32) is full after about four contacts.
+   *
+   * @return TRUE on success
+   */
+  public function upgrade_1001() {
+    $this->ctx->log->info('Applying update 1001: widen email_cc and email_bcc');
+    CRM_Core_DAO::executeQuery('ALTER TABLE civicrm_scheduledreminderdata MODIFY email_cc text NULL COMMENT "Email CC field of Schedule reminder", MODIFY email_bcc text NULL COMMENT "Email BCC field of Schedule reminder"');
+    return TRUE;
+  }
+
 }
