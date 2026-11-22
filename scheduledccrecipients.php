@@ -128,12 +128,13 @@ function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
   // This hook runs for every outgoing mail. Many of them (for example receipts
   // built from message template workflows) carry no groupName, entity or
   // entity_id, so read them defensively. Anything that is not a scheduled
-  // reminder is left alone.
+  // reminder is left alone. Core passes entity and entity_id for scheduled
+  // reminders itself, so no core patch is needed to recognise them.
   $groupName = $params['groupName'] ?? NULL;
   $entity = $params['entity'] ?? NULL;
   $reminder_id = $params['entity_id'] ?? NULL;
 
-  if ($groupName === "Scheduled Reminder Sender" && $entity === "action_schedule" && isset($params["token_params"]) && $reminder_id) {
+  if ($groupName === "Scheduled Reminder Sender" && $entity === "action_schedule" && $reminder_id) {
     $data = civicrm_api3("ScheduledReminderData", "get", [
       "reminder_id"  => $reminder_id,
       "sequential"   => TRUE,

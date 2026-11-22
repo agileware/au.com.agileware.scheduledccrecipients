@@ -24,9 +24,6 @@
     <namespace>CRM/Scheduledccrecipients</namespace>
     <format>25.10.2</format>
   </civix>
-  <comments>
-    Note: This extension currently requires a core patch to work correctly See README.
-  </comments>
   <classloader>
     <psr0 prefix="CRM_" path="."/>
     <psr4 prefix="Civi\" path="Civi"/>

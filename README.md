@@ -11,28 +11,17 @@ add that person as a recipient of the reminder itself.
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
-## Important: Requires a CiviCRM core patch
+## No core patch needed
 
-This extension **requires a patch to CiviCRM core** to function. Without the patch, the CC and BCC
-fields will appear on the Scheduled Reminders form and will save correctly, but the extra
-recipients will **not** receive the emails when the reminder is sent.
-
-The patch, [civcirm-core-reminder-tokens.patch](civcirm-core-reminder-tokens.patch), adds a
-`token_params` entry to the parameters CiviCRM core passes to `hook_civicrm_alterMailParams` in
-`CRM/Core/BAO/ActionSchedule.php`. This extension's `hook_civicrm_alterMailParams` implementation
-checks for `token_params` to identify the mail as a scheduled reminder send, and only then applies
-the extra CC/BCC addresses.
-
-Apply the patch to your CiviCRM core codebase before (or after) installing this extension. If your
-CiviCRM version has already merged an equivalent change upstream, confirm whether the patch still
-applies or is still required for your version before applying it.
+Earlier versions required a patch to CiviCRM core (adding `token_params` to the parameters passed
+to `hook_civicrm_alterMailParams`). That is no longer the case: core already passes `groupName`,
+`entity` and `entity_id` for scheduled reminders, which is all this extension needs to recognise
+them. If you applied the old patch, it is harmless and can stay or be removed.
 
 ## Getting Started
 
-1. Apply [civcirm-core-reminder-tokens.patch](civcirm-core-reminder-tokens.patch) to your CiviCRM
-   core codebase (see above).
-2. Install and enable this extension (see [Installation](#installation-web-ui) below).
-3. No further configuration is required. No settings page, API keys, or additional permissions are
+1. Install and enable this extension (see [Installation](#installation-web-ui) below).
+2. No further configuration is required. No settings page, API keys, or additional permissions are
    needed beyond the standard CiviCRM permission to administer Scheduled Reminders
    (`administer CiviCRM` / access to "Administer / Communications / Schedule Reminders").
 
@@ -63,15 +52,11 @@ need to inspect or script against this data directly.
 ## Requirements
 
 * CiviCRM 5.51+
-* The CiviCRM core patch described above ([civcirm-core-reminder-tokens.patch](civcirm-core-reminder-tokens.patch))
 
 ## Installation (Web UI)
 
 Learn more about installing CiviCRM extensions in the [CiviCRM Sysadmin
 Guide](https://docs.civicrm.org/sysadmin/en/latest/customize/extensions/).
-
-Remember to also apply the required core patch (see above) - the extension will install and its
-fields will display without it, but the CC/BCC recipients will not actually be emailed.
 
 ## Running the tests
 

@@ -45,14 +45,26 @@ class AlterMailParamsTest extends ScheduledccrecipientsTestCase {
     $this->assertSame($before, $params);
   }
 
-  public function testReminderWithoutTokenParamsIsLeftAlone(): void {
+  public function testReminderWithoutTokenParamsStillGetsRecipients(): void {
     $reminderId = $this->createReminder();
     $this->saveData($reminderId, [$this->createContact('cc@example.test')], []);
     $params = $this->reminderMailParams($reminderId);
     unset($params['token_params']);
-    $before = $params;
     scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
-    $this->assertSame($before, $params);
+    $this->assertSame('cc@example.test', $params['cc']);
+  }
+
+  public function testManyContactsFitInTheColumns(): void {
+    $reminderId = $this->createReminder();
+    $ids = [];
+    for ($i = 0; $i < 8; $i++) {
+      $ids[] = $this->createContact("many$i@example.test");
+    }
+    $this->saveData($reminderId, $ids, $ids);
+    $params = $this->reminderMailParams($reminderId);
+    scheduledccrecipients_civicrm_alterMailParams($params, 'messageTemplate');
+    $this->assertCount(8, explode(',', $params['cc']));
+    $this->assertCount(8, explode(',', $params['bcc']));
   }
 
   public function testReminderWithoutEntityIdIsLeftAlone(): void {
