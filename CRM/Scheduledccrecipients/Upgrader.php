@@ -143,4 +143,18 @@ class CRM_Scheduledccrecipients_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Add location_type_id, the location type of the email address a reminder
+   * is sent to.
+   *
+   * @return TRUE on success
+   */
+  public function upgrade_1002() {
+    $this->ctx->log->info('Applying update 1002: add location_type_id');
+    if (!CRM_Core_BAO_SchemaHandler::checkIfFieldExists('civicrm_scheduledreminderdata', 'location_type_id')) {
+      CRM_Core_DAO::executeQuery('ALTER TABLE civicrm_scheduledreminderdata ADD COLUMN location_type_id int unsigned NULL COMMENT "Location type of the email address the reminder is sent to. NULL means the primary email."');
+    }
+    return TRUE;
+  }
+
 }

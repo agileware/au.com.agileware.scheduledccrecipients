@@ -38,6 +38,7 @@ function scheduledccrecipients_civicrm_enable() {
 function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
   if ($formName == "CRM_Admin_Form_ScheduleReminders" && ($form->getAction() & CRM_Core_Action::ADD || $form->getAction() & CRM_Core_Action::UPDATE)) {
     $fillReminderCustomFields = FALSE;
+    $locationTypeId = '';
 
     if ($form->getVar('_id')) {
       $values = $form->getVar('_values');
@@ -53,12 +54,14 @@ function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
         $fillReminderCustomFields = TRUE;
         $ccValues = array_column($data["values"], "email_cc");
         $bccValues = array_column($data["values"], "email_bcc");
+        $locationTypeId = (string) (array_values($data["values"])[0]["location_type_id"] ?? '');
       }
 
       $form->assign('cc_values', $ccValues);
       $form->assign('bcc_values', $bccValues);
     }
 
+    $form->assign('location_type_value', $locationTypeId ?? '');
     $form->assign('fill_reminder_custom_fields', $fillReminderCustomFields);
 
     $form->addEntityRef('email_cc', ts('CC'), [
@@ -72,6 +75,12 @@ function scheduledccrecipients_civicrm_buildForm($formName, &$form) {
         'placeholder' => ts('- Select Contacts -'),
         'select' => ['minimumInputLength' => 0, 'multiple' => TRUE],
     ]);
+
+    $form->add('select', 'location_type_id', ts('Email Location Type'),
+      CRM_Core_PseudoConstant::get('CRM_Core_DAO_Address', 'location_type_id'),
+      FALSE,
+      ['class' => 'crm-select2', 'placeholder' => ts('- Primary email -'), 'allowClear' => TRUE]
+    );
 
     CRM_Core_Region::instance('page-body')->add([
         'template' => 'CRM/Scheduledccrecipients/Form/Fields.tpl',
@@ -108,6 +117,7 @@ function scheduledccrecipients_civicrm_postProcess($formName, &$form) {
 
     $params["email_cc"] = $emailCCValues;
     $params["email_bcc"] = $emailBCCValues;
+    $params["location_type_id"] = ($form->_submitValues['location_type_id'] ?? '') ?: 'null';
 
     $actionScheduleCount = civicrm_api3('ActionSchedule', 'getcount', [
       'id' => $formid,
@@ -151,7 +161,41 @@ function scheduledccrecipients_civicrm_alterMailParams(&$params, $context) {
 
       $params["cc"] = implode(",", $ccEmails);
       $params["bcc"] = implode(",", $bccEmails);
+
+      if (!empty($data["location_type_id"]) && !empty($params["contactId"])) {
+        scheduledccrecipients_apply_location_type($params, (int) $params["contactId"], (int) $data["location_type_id"]);
+      }
     }
+  }
+}
+
+/**
+ * Send the reminder to the recipient's email of the chosen location type.
+ *
+ * The primary email is kept when the contact has no usable email of that type
+ * (none, or on hold), and when the mail does not go to the contact's primary
+ * email (for example when the reminder uses alternate recipients).
+ *
+ * @param array $params
+ *   The mail params, changed in place.
+ * @param int $contactId
+ * @param int $locationTypeId
+ */
+function scheduledccrecipients_apply_location_type(array &$params, int $contactId, int $locationTypeId): void {
+  $primary = CRM_Contact_BAO_Contact::getPrimaryEmail($contactId, TRUE);
+  if (!$primary || ($params['toEmail'] ?? NULL) !== $primary) {
+    return;
+  }
+  $email = \Civi\Api4\Email::get(FALSE)
+    ->addSelect('email')
+    ->addWhere('contact_id', '=', $contactId)
+    ->addWhere('location_type_id', '=', $locationTypeId)
+    ->addWhere('on_hold', '=', 0)
+    ->addOrderBy('is_primary', 'DESC')
+    ->addOrderBy('id', 'ASC')
+    ->execute()->first();
+  if (!empty($email['email'])) {
+    $params['toEmail'] = $email['email'];
   }
 }
 

@@ -47,12 +47,13 @@ abstract class ScheduledccrecipientsTestCase extends TestCase implements Headles
    * The parameters core passes to hook_civicrm_alterMailParams for a
    * scheduled reminder, as modified by civcirm-core-reminder-tokens.patch.
    */
-  protected function reminderMailParams(int $reminderId): array {
+  protected function reminderMailParams(int $reminderId, ?int $contactId = NULL, string $toEmail = 'to@example.test'): array {
     return [
       'groupName' => 'Scheduled Reminder Sender',
       'from' => 'sender@example.test',
       'toName' => 'To Person',
-      'toEmail' => 'to@example.test',
+      'toEmail' => $toEmail,
+      'contactId' => $contactId,
       'subject' => 'Reminder',
       'entity' => 'action_schedule',
       'entity_id' => $reminderId,

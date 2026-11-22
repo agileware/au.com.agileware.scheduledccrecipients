@@ -8,6 +8,7 @@ This is useful, for example, if you want to notify an event coordinator or staff
 scheduled reminder email is sent to a Participant, Member, or other recipient, without adding that
 person as a recipient of the reminder itself. Provides:
 
+* An **Email Location Type** field, to send the reminder to a recipient's Work, Home or other email instead of their primary email
 * CC and BCC contact fields on the Add and Edit Schedule Reminder form, placed after **From Email Address**
 * Any number of CC and BCC contacts for each reminder
 * The selected contacts' email addresses added to every email the reminder sends
@@ -19,14 +20,24 @@ This extension is licensed under [AGPL-3.0](https://github.com/agileware/au.com.
 ## Usage
 
 1. Go to "Administer / Communications / Schedule Reminders" and add or edit a Scheduled Reminder.
-2. The new **CC** and **BCC** fields appear on the form, immediately after the **From Email Address**
-   field. Select one or more CiviCRM contacts in each.
+2. The new **Email Location Type**, **CC** and **BCC** fields appear on the form, immediately after
+   the **From Email Address** field. Select one or more CiviCRM contacts in CC and BCC.
 
    ![Scheduled Reminder CC and BCC fields](https://github.com/agileware/au.com.agileware.scheduledccrecipients/raw/master/scheduledccrecipients.png)
 
 3. Save the Scheduled Reminder as usual. The CC/BCC contacts are stored against that reminder.
 4. When the Scheduled Reminder job runs and sends the reminder, the CC and BCC contacts' email
    addresses are added to the outgoing message, in addition to the reminder's configured recipients.
+
+### Email Location Type
+
+By default a reminder goes to each recipient's primary email address, which is CiviCRM's behaviour.
+Choose a location type, for example Work, to send it to the recipient's email of that type instead.
+The primary email is still used when the recipient has no email of that type, when that email is on
+hold, and when the reminder uses alternate recipients. Recipients without a primary email are still
+skipped by CiviCRM itself, as it only looks at them if they have one.
+
+### CC and BCC
 
 A CC or BCC contact is included by their primary email address. A contact with no email address is
 silently skipped. Only the Schedule Reminders emails are changed: all other CiviCRM mail, such as
@@ -36,7 +47,7 @@ contribution and event receipts, is left alone.
 
 CC/BCC selections are stored per reminder in the `civicrm_scheduledreminderdata` table, linked to the
 Scheduled Reminder (`ActionSchedule`) by `reminder_id`. The contact ids are stored as a comma
-separated list in `email_cc` and `email_bcc`. The extension exposes a `ScheduledReminderData` API
+separated list in `email_cc` and `email_bcc`, and the chosen location type in `location_type_id`. The extension exposes a `ScheduledReminderData` API
 (v3) with `get`, `create` and `delete` actions, for example:
 
     cv api3 ScheduledReminderData.get reminder_id=12
@@ -69,7 +80,8 @@ extension needs to recognise a scheduled reminder. If you applied it to your cor
 can stay or be removed.
 
 After updating, run the database upgrade ("Administer / System Settings / Extensions", or
-`cv updb`). It widens the CC and BCC columns, which could previously hold only about four contacts.
+`cv updb`). It widens the CC and BCC columns, which could previously hold only about four contacts, and adds the
+location type column.
 
 ## Running the tests
 

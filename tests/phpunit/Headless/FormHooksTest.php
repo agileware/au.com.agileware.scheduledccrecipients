@@ -60,6 +60,21 @@ class FormHooksTest extends ScheduledccrecipientsTestCase {
     $this->assertSame((string) $second, array_values($data['values'])[0]['email_cc']);
   }
 
+  public function testPostProcessStoresAndClearsTheLocationType(): void {
+    $reminderId = $this->createReminder();
+    $workTypeId = (int) civicrm_api3('LocationType', 'getvalue', ['name' => 'Work', 'return' => 'id']);
+
+    $form = $this->submittedForm($reminderId, ['email_cc' => '', 'email_bcc' => '', 'location_type_id' => (string) $workTypeId]);
+    scheduledccrecipients_civicrm_postProcess('CRM_Admin_Form_ScheduleReminders', $form);
+    $data = civicrm_api3('ScheduledReminderData', 'getsingle', ['reminder_id' => $reminderId]);
+    $this->assertSame((string) $workTypeId, (string) $data['location_type_id']);
+
+    $form = $this->submittedForm($reminderId, ['email_cc' => '', 'email_bcc' => '', 'location_type_id' => '']);
+    scheduledccrecipients_civicrm_postProcess('CRM_Admin_Form_ScheduleReminders', $form);
+    $data = civicrm_api3('ScheduledReminderData', 'getsingle', ['reminder_id' => $reminderId]);
+    $this->assertEmpty($data['location_type_id'] ?? NULL);
+  }
+
   public function testPostProcessIgnoresOtherForms(): void {
     $reminderId = $this->createReminder();
     $form = $this->submittedForm($reminderId, ['email_cc' => '1', 'email_bcc' => '1']);
