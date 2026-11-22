@@ -25,7 +25,7 @@ This extension is licensed under [AGPL-3.0](https://github.com/agileware/au.com.
    **CC** and **BCC** immediately after the **From Email Address** field. Select one or more CiviCRM
    contacts in CC and BCC.
 
-   ![Scheduled Reminder CC and BCC fields, from an earlier version](https://github.com/agileware/au.com.agileware.scheduledccrecipients/raw/master/scheduledccrecipients.png)
+   ![Scheduled Reminder form with the Email Location Type, CC and BCC fields](https://github.com/agileware/au.com.agileware.scheduledccrecipients/raw/master/scheduledccrecipients.png)
 
 3. Save the Scheduled Reminder as usual. The location type and the CC/BCC contacts are stored against
    that reminder.
